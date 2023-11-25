@@ -2,27 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(User) private readonly usersRepository: Repository<User>,
+  ) {}
   private users: User[] = [];
 
-  create(createUserDto: CreateUserDto) {
-    const currentMaxId = this.users[this.users.length - 1]?.id || 0;
-
-    const id = currentMaxId + 1;
-
+  async create(createUserDto: CreateUserDto) {
     const user = {
-      id,
       ...createUserDto,
     };
 
-    this.users.push(user);
-    return user;
+    return await this.usersRepository.save(user);
   }
 
   findAll() {
-    return this.users;
+    return this.usersRepository.find();
   }
 
   findOne(id: number) {
@@ -30,22 +29,14 @@ export class UsersService {
     return this.users[index];
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    const user = this.findOne(id);
-    const index = this.users.findIndex((user) => user.id === id);
-    const newUser = {
-      ...user,
-      ...updateUserDto,
-    };
-    this.users[index] = newUser;
-    return newUser;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    Object.assign(user, updateUserDto);
+    return await this.usersRepository.save(user);
   }
 
-  remove(id: number) {
-    const index = this.users.findIndex((user) => user.id === id);
-
-    this.users.splice(index, 1);
-
-    return;
+  async remove(id: number) {
+    const user = await this.usersRepository.findOne({ where: { id } });
+    return await this.usersRepository.remove(user);
   }
 }
