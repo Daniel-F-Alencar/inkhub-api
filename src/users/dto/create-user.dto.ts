@@ -11,5 +11,8 @@ export class CreateUserDto {
   googleId: string;
 
   @IsString()
-  description: string;
+  imageUrl: string;
+
+  @IsString()
+  portifolioUrl: string;
 }

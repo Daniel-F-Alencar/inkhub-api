@@ -26,6 +26,11 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @Get('exists/:googleId')
+  async searchIfExists(@Param('googleId') googleId: string): Promise<boolean> {
+    return await this.usersService.searchIfExists(googleId);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     const user = this.usersService.findOne(+id);

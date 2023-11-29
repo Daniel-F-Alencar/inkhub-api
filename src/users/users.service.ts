@@ -20,13 +20,17 @@ export class UsersService {
     return await this.usersRepository.save(user);
   }
 
+  async searchIfExists(googleId: string): Promise<boolean> {
+    const user = await this.usersRepository.findOne({ where: { googleId } });
+    return user ? true : false;
+  }
+
   findAll() {
     return this.usersRepository.find();
   }
 
   findOne(id: number) {
-    const index = this.users.findIndex((user) => user.id === id);
-    return this.users[index];
+    return this.usersRepository.findOne({ where: { id } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {

@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Scheduling } from 'src/scheduling/entities/scheduling.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -14,6 +15,12 @@ export class User {
   @Column()
   googleId: string;
 
-  @Column({ length: 255 })
-  description: string;
+  @Column()
+  imageUrl: string;
+
+  @Column()
+  portifolioUrl: string;
+
+  @OneToMany(() => Scheduling, (scheduling) => scheduling.studio)
+  schedules: Scheduling[];
 }
