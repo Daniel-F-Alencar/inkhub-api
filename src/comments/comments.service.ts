@@ -4,18 +4,33 @@ import { CreateCommentDto } from './dto/create-comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { Comment } from 'src/comments/entities/comment.entity';
+import { Studio } from 'src/studios/entities/studio.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class CommentsService {
   constructor(
     @InjectRepository(Comment)
     private readonly commentsRepository: Repository<Comment>,
+    @InjectRepository(Studio)
+    private readonly studiosRepository: Repository<Studio>,
+
+    @InjectRepository(User)
+    private readonly usersRepository: Repository<User>,
   ) {}
   async create(createCommentDto: CreateCommentDto) {
+    const studio = await this.studiosRepository.findOne({
+      where: { id: createCommentDto.studio },
+    });
+
+    const user = await this.usersRepository.findOne({
+      where: { id: createCommentDto.user },
+    });
+
     const comment: DeepPartial<Comment> = {
       content: createCommentDto.content,
-      user: { id: createCommentDto.user },
-      studio: { id: createCommentDto.studio },
+      user: user,
+      studio: studio,
     };
 
     return await this.commentsRepository.save(comment);
