@@ -13,9 +13,6 @@ export class StudiosService {
   ) {}
 
   async create(createStudioDto: CreateStudioDto) {
-    // const studio = {
-    //   ...createStudioDto,
-    // };
     const studio: DeepPartial<Studio> = {
       ...createStudioDto,
       blockedDates: [{ dtStartBlock: new Date(), dtEndBlock: new Date() }],
@@ -24,7 +21,13 @@ export class StudiosService {
   }
 
   findAll() {
-    return this.studiosRepository.find();
+    return this.studiosRepository.find({
+      relations: {
+        blockedDates: true,
+        comments: true,
+        schedules: true,
+      },
+    });
   }
 
   findOne(id: number) {
