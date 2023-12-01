@@ -20,9 +20,9 @@ export class UsersService {
     return await this.usersRepository.save(user);
   }
 
-  async searchIfExists(googleId: string): Promise<boolean> {
+  async searchIfExists(googleId: string): Promise<User | boolean> {
     const user = await this.usersRepository.findOne({ where: { googleId } });
-    return user ? true : false;
+    return user ? user : false;
   }
 
   findAll() {

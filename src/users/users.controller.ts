@@ -11,6 +11,7 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
@@ -27,7 +28,9 @@ export class UsersController {
   }
 
   @Get('exists/:googleId')
-  async searchIfExists(@Param('googleId') googleId: string): Promise<boolean> {
+  async searchIfExists(
+    @Param('googleId') googleId: string,
+  ): Promise<User | boolean> {
     return await this.usersService.searchIfExists(googleId);
   }
 
