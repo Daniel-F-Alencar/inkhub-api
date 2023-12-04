@@ -41,10 +41,13 @@ export class StudiosService {
     });
   }
 
-  async searchIfExists(googleId: string): Promise<boolean> {
-    const user = await this.studiosRepository.findOne({ where: { googleId } });
-    return user ? true : false;
+  async searchIfExists(googleId: string): Promise<Studio | boolean> {
+    const studio = await this.studiosRepository.findOne({
+      where: { googleId },
+    });
+    return studio ? studio : false;
   }
+
   async update(id: number, updateStudioDto: UpdateStudioDto) {
     const studio = await this.studiosRepository.findOne({ where: { id } });
     Object.assign(studio, updateStudioDto);

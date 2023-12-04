@@ -10,6 +10,7 @@ import {
 import { StudiosService } from './studios.service';
 import { CreateStudioDto } from './dto/create-studio.dto';
 import { UpdateStudioDto } from './dto/update-studio.dto';
+import { Studio } from './entities/studio.entity';
 
 @Controller('studios')
 export class StudiosController {
@@ -23,6 +24,13 @@ export class StudiosController {
   @Get()
   findAll() {
     return this.studiosService.findAll();
+  }
+
+  @Get('exists/:googleId')
+  async searchIfExists(
+    @Param('googleId') googleId: string,
+  ): Promise<Studio | boolean> {
+    return await this.studiosService.searchIfExists(googleId);
   }
 
   @Get(':id')
